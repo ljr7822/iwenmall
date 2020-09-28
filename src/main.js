@@ -5,10 +5,15 @@ import VueAxios from 'vue-axios'
 import App from './App.vue'
 // import env from './env'
 
+const mock = false;
+if(mock){
+  require('./mock/api')
+}
+
 Vue.config.productionTip = false
 
-// axios.defaults.baseURL = '/api';
-// axios.defaults.timeout = 8000;
+axios.defaults.baseURL = 'https://www.easy-mock.com/mock/5f6f0151d94dae3ef99d173b/iwenmall';
+axios.defaults.timeout = 8000;
 
 // axios.defaults.baseURL = env.baseURL;
 
