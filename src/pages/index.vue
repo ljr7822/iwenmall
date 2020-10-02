@@ -7,14 +7,17 @@
             <li class="menu-item">
               <a href="javascript:;">手机 电话卡</a>
               <div class="children">
-                  <ul v-for="(item,i) in menuList" :key="i">
-                      <li v-for="(sub, j) in item" :key="j">
-                          <a v-bind:href="sub?'/#/product'+ sub.id:''">
-                              <img v-bind:src="sub?sub.img : '/imgs/item-box-1.png'" alt="">
-                              {{sub?sub.name: '小米9'}}
-                          </a>
-                      </li>
-                  </ul>
+                <ul v-for="(item, i) in menuList" :key="i">
+                  <li v-for="(sub, j) in item" :key="j">
+                    <a v-bind:href="sub ? '/#/product' + sub.id : ''">
+                      <img
+                        v-bind:src="sub ? sub.img : '/imgs/item-box-1.png'"
+                        alt=""
+                      />
+                      {{ sub ? sub.name : "小米9" }}
+                    </a>
+                  </li>
+                </ul>
               </div>
             </li>
             <li class="menu-item">
@@ -53,16 +56,44 @@
         </swiper>
       </div>
       <div class="ads-box">
-        <a v-bind:href="'/#/product/'+item.id" v-for="(item,index) in adsList" :key="index">
-          <img v-bind:src="item.img" alt="">
+        <a
+          v-bind:href="'/#/product/' + item.id"
+          v-for="(item, index) in adsList"
+          :key="index"
+        >
+          <img v-bind:src="item.img" alt="" />
         </a>
       </div>
       <div class="banner">
-          <a href="/#/product/30">
-            <img src="/imgs/banner-1.png" alt="">
+        <a href="/#/product/30">
+          <img src="/imgs/banner-1.png" alt="" />
         </a>
       </div>
-      <div class="product-box"></div>
+    </div>
+    <div class="product-box">
+      <div class="container">
+        <h2>手机</h2>
+        <div class="wrapper">
+          <div class="banner-left">
+            <a href="/#/product/35"><img src="/imgs/mix-alpha.jpg" alt="" /></a>
+          </div>
+          <div class="list-box">
+            <div class="list" v-for="(arr, h) in phoneList" :key="h">
+              <div class="item" v-for="(item, f) in arr" :key="f">
+                <span v-bind:class="{'new-pro':f%2==0}">新品</span>
+                <div class="item-img">
+                  <img v-bind:src="item.mainImage" alt="" />
+                </div>
+                <div class="item-info">
+                  <h3>{{item.name}}</h3>
+                  <p>{{item.subtitle}}</p>
+                  <p class="price">{{item.price}}元</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <service-bar></service-bar>
   </div>
@@ -126,126 +157,150 @@ export default {
         },
       ],
 
-      menuList:[
-          [
-            {
-                id:30,
-                img:'/imgs/item-box-1.png',
-                name:'小米cc9',
-            },{
-                id:31,
-                img:'/imgs/item-box-2.png',
-                name:'小米8青春版',
-            },{
-                id:32,
-                img:'/imgs/item-box-3.jpg',
-                name:'RedMi k20 Pro',
-            },{
-                id:33,
-                img:'/imgs/item-box-4.jpg',
-                name:'移动4G+专区',
-            }
-          ],
-          [0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]
+      menuList: [
+        [
+          {
+            id: 30,
+            img: "/imgs/item-box-1.png",
+            name: "小米cc9",
+          },
+          {
+            id: 31,
+            img: "/imgs/item-box-2.png",
+            name: "小米8青春版",
+          },
+          {
+            id: 32,
+            img: "/imgs/item-box-3.jpg",
+            name: "RedMi k20 Pro",
+          },
+          {
+            id: 33,
+            img: "/imgs/item-box-4.jpg",
+            name: "移动4G+专区",
+          },
+        ],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
       ],
 
-      adsList:[
-          {
-              id:33,
-              img:'/imgs/ads/ads-1.png',
-          },
-          {
-              id:48,
-              img:'/imgs/ads/ads-2.jpg',
-          },
-          {
-              id:45,
-              img:'/imgs/ads/ads-3.png',
-          },
-          {
-              id:47,
-              img:'/imgs/ads/ads-4.jpg',
-          }
-      ]
+      adsList: [
+        {
+          id: 33,
+          img: "/imgs/ads/ads-1.png",
+        },
+        {
+          id: 48,
+          img: "/imgs/ads/ads-2.jpg",
+        },
+        {
+          id: 45,
+          img: "/imgs/ads/ads-3.png",
+        },
+        {
+          id: 47,
+          img: "/imgs/ads/ads-4.jpg",
+        },
+      ],
+      phoneList: [],
     };
   },
+  
+  mounted(){
+    this.init();
+  },
+  methods:{
+      init(){
+          this.axios.get('/products',{
+              params:{
+                categoryId:100012,
+                pageSize:8
+              }
+          }).then((res)=>{
+              this.phoneList = [res.list.slice(0,4), res.list.slice(4,8)]
+          })
+      }
+  }
 };
 </script>
 <style lang="scss">
-    @import './../assets/sass/config.scss';
-    @import './../assets/sass/mixin.scss';
+@import "./../assets/sass/config.scss";
+@import "./../assets/sass/mixin.scss";
 .index {
   .swiper-box {
     .nav-menu {
-        position:absolute;
-        width:264px;
-        height:451px;
-        z-index:9;
-        padding:26px 0;
-        background-color:#55585a7a;
-        box-sizing:border-box;
-        .menu-wrap{
-            .menu-item{
-                height:50px;
-                line-height:50px;
-                a{
-                    position: relative;
-                    display: block;
-                    font-size:$fontI;
-                    color:$colorG;
-                    padding-left: 30px;
-                    &:after{
-                        position: absolute;
-                        right: 30px;
-                        top: 17.5px;
-                        content: ' ';
-                        @include bgImg(10px,15px,'/imgs/icon-arrow.png');
-                    }
-                }
-                &:hover{
-                    background-color: $colorA;
-                    .children{
-                        display: block;
-                    }
-                }
-                .children{
-                    display: none;
-                    width: 962px;
-                    height: 451px;
-                    background-color: $colorG;
-                    position: absolute;
-                    top: 0;
-                    left: 264px;
-                    border: 1px solid $colorH;
-                    ul{
-                        display: flex;
-                        justify-content: space-between;
-                        height: 75px;
-                        li{
-                            height: 75px;
-                            line-height: 75px;
-                            flex: 1;
-                            padding-left: 23px;
-                        }
-                        a{
-                            color: $colorB;
-                            font-size: 14px;
-                        }
-                        img{
-                            width: 42px;
-                            height: 35px;
-                            vertical-align: middle;
-                            margin-right: 15px;
-                        }
-                    }
-                }
+      position: absolute;
+      width: 264px;
+      height: 451px;
+      z-index: 9;
+      padding: 26px 0;
+      background-color: #55585a7a;
+      box-sizing: border-box;
+      .menu-wrap {
+        .menu-item {
+          height: 50px;
+          line-height: 50px;
+          a {
+            position: relative;
+            display: block;
+            font-size: $fontI;
+            color: $colorG;
+            padding-left: 30px;
+            &:after {
+              position: absolute;
+              right: 30px;
+              top: 17.5px;
+              content: " ";
+              @include bgImg(10px, 15px, "/imgs/icon-arrow.png");
             }
+          }
+          &:hover {
+            background-color: $colorA;
+            .children {
+              display: block;
+            }
+          }
+          .children {
+            display: none;
+            width: 962px;
+            height: 451px;
+            background-color: $colorG;
+            position: absolute;
+            top: 0;
+            left: 264px;
+            border: 1px solid $colorH;
+            ul {
+              display: flex;
+              justify-content: space-between;
+              height: 75px;
+              li {
+                height: 75px;
+                line-height: 75px;
+                flex: 1;
+                padding-left: 23px;
+              }
+              a {
+                color: $colorB;
+                font-size: 14px;
+              }
+              img {
+                width: 42px;
+                height: 35px;
+                vertical-align: middle;
+                margin-right: 15px;
+              }
+            }
+          }
         }
+      }
     }
     .swiper-container {
       height: 451px;
-      .swiper-button-prev{
-          left: 274px;
+      .swiper-button-prev {
+        left: 274px;
       }
       img {
         width: 100%;
@@ -253,18 +308,99 @@ export default {
       }
     }
   }
-  .ads-box{
-      @include flex();
-      margin-top: 14px;
-      margin-bottom: 31px;
-      a{
-          width: 296px;
-          height: 167px;
-      }
+  .ads-box {
+    @include flex();
+    margin-top: 14px;
+    margin-bottom: 31px;
+    a {
+      width: 296px;
+      height: 167px;
+    }
   }
-  .banner{
-      margin-top: 30px;
-      margin-bottom: 50px;
+  .banner {
+    margin-top: 30px;
+    margin-bottom: 50px;
+  }
+  .product-box {
+    background-color: $colorJ;
+    padding: 30px 0 50px;
+    h2 {
+      font-size: 22px;
+      height: 21px;
+      line-height: 21px;
+      color: $colorB;
+    }
+    .wrapper {
+      display: flex;
+      .banner-left {
+        margin-right: 16px;
+        img {
+          width: 224px;
+          height: 619px;
+        }
+      }
+      .list-box {
+        .list {
+          @include flex();
+          width: 986px;
+          margin-bottom: 14px;
+          &:last-child {
+            margin-bottom: 0;
+          }
+          .item {
+            width: 236px;
+            height: 302px;
+            background-color: $colorG;
+            text-align: center;
+            span {
+                display: inline-block;
+                width: 67px;
+                height: 24px;
+                font-size: 14px;
+                line-height: 24px;
+                color:$colorG;
+                &.new-pro{
+                    background-color: #7ecf68;
+                }
+                &.kill-pro{
+                    background-color: #e82626;
+                }
+            }
+            .item-img {
+              img {
+                height: 195px;
+                width: 100%;
+              }
+            }
+            .item-info {
+              h3 {
+                font-size: $fontJ;
+                color: $colorB;
+                line-height: $fontJ;
+                font-weight: bold;
+              }
+              p {
+                color: $colorD;
+                line-height: 13px;
+                margin: 6px auto 13px;
+              }
+              .price {
+                color: #f20a0a;
+                font-size: $fontJ;
+                font-weight: bold;
+                cursor: pointer;
+                &:after {
+                  @include bgImg(20px, 20px, "/imgs/icon-cart-hover.png");
+                  content: " ";
+                  margin-left: 5px;
+                  vertical-align: middle;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 </style>
