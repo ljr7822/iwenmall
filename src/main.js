@@ -4,6 +4,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import App from './App.vue'
 import VueLazyLoad from 'vue-lazyload'
+import VueCookie from 'vue-cookie'
 // import env from './env'
 
 const mock = false;
@@ -28,10 +29,12 @@ axios.interceptors.response.use(function(response){
     window.location.href = '/#/login';
   }else{
     alert(res.msg);
+    return Promise.reject(res);
   }
 });
 
 Vue.use(VueAxios,axios);
+Vue.use(VueCookie);
 Vue.use(VueLazyLoad,{
   location:'/imgs/loading-svg/loading-balls.svg'
 })
