@@ -9,7 +9,7 @@
               <div class="children">
                 <ul v-for="(item, i) in menuList" :key="i">
                   <li v-for="(sub, j) in item" :key="j">
-                    <a v-bind:href="sub ? '/#/product' + sub.id : ''">
+                    <a v-bind:href="sub ? '/#/product/' + sub.id : ''">
                       <img
                         v-bind:src="sub ? sub.img : '/imgs/item-box-1.png'"
                         alt=""
