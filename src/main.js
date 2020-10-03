@@ -3,6 +3,7 @@ import router from './router'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import App from './App.vue'
+import VueLazyLoad from 'vue-lazyload'
 // import env from './env'
 
 const mock = false;
@@ -31,6 +32,9 @@ axios.interceptors.response.use(function(response){
 });
 
 Vue.use(VueAxios,axios);
+Vue.use(VueLazyLoad,{
+  location:'/imgs/loading-svg/loading-balls.svg'
+})
 
 new Vue({
   router,
