@@ -87,7 +87,7 @@
                 <div class="item-info">
                   <h3>{{item.name}}</h3>
                   <p>{{item.subtitle}}</p>
-                  <p class="price">{{item.price}}元</p>
+                  <p class="price" @click="addCart(item.id)">{{item.price}}元</p>
                 </div>
               </div>
             </div>
@@ -96,10 +96,18 @@
       </div>
     </div>
     <service-bar></service-bar>
+    <modal title="提示" sureText="查看购物车" btnType="1" modalType="middle" v-bind:showModal="showModal" 
+    v-on:submit="goToCart"
+    v-on:cancel="showModal=false">
+      <template v-slot:body>
+        <p>商品添加成功！</p>
+      </template>
+    </modal>
   </div>
 </template>
 <script>
 import ServiceBar from "./../components/ServiceBar";
+import Modal from "./../components/Modal";
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/css/swiper.css";
 //import 'swiper/swiper-bundle.css'
@@ -114,6 +122,7 @@ export default {
     Swiper,
     SwiperSlide,
     ServiceBar,
+    Modal,
   },
   data() {
     return {
@@ -206,6 +215,7 @@ export default {
         },
       ],
       phoneList: [],
+      showModal:false
     };
   },
   
@@ -217,11 +227,27 @@ export default {
           this.axios.get('/products',{
               params:{
                 categoryId:100012,
-                pageSize:8
+                pageSize:14
               }
           }).then((res)=>{
+              res.list = res.list.slice(6,14);
               this.phoneList = [res.list.slice(0,4), res.list.slice(4,8)]
           })
+      },
+      addCart(){
+        this.showModal = true;
+        return;
+        // this.axios.post('/carts',{
+        //   productId:id,
+        //   selected: true
+        // }).then(()=>{
+
+        // }).catch(()=>{
+        //   this.showModal = true;
+        // })
+      },
+      goToCart(){
+        this.$router.push('/cart');
       }
   }
 };
@@ -328,6 +354,7 @@ export default {
       font-size: 22px;
       height: 21px;
       line-height: 21px;
+      margin-bottom: 10px;
       color: $colorB;
     }
     .wrapper {
