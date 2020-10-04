@@ -1,8 +1,8 @@
 <template>
   <div class="product">
-    <product-param>
+    <product-param v-bind:title="product.name">
       <template v-slot:buy>
-        <button class="btn">立即购买</button>
+        <button class="btn" @click="buy">立即购买</button>
       </template>
     </product-param>
     <div class="content">
@@ -122,6 +122,7 @@ export default{
           this.product = res;
         })
       },
+      // 立即购买按钮
       buy(){
         let id = this.$route.params.id;
         this.$router.push(`/detail/${id}`);

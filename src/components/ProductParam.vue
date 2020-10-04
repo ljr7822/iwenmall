@@ -2,7 +2,7 @@
   <div class="nav-bar" :class="{'is_fixed':isFixed}">
     <div class="container">
       <div class="pro-title">
-        标题
+        {{title}}
       </div>
       <div class="pro-param">
         <a href="javascript:;">概述</a><span>|</span>
