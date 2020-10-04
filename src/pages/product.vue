@@ -115,6 +115,7 @@ export default{
       this.getProductInfo();
     },
     methods:{
+        // 获取商品信息
       getProductInfo(){
         let id = this.$route.params.id;
         this.axios.get(`/products/${id}`).then((res)=>{
