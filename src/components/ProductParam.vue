@@ -22,18 +22,24 @@
     },
     data(){
       return {
+        // 初始化定位：否
         isFixed:false
       }
     },
     mounted(){
+      // 绑定浏览器滚动事件
       window.addEventListener('scroll',this.initHeight)
     },
     methods:{
       initHeight(){
+        // 计算高度：当滚动高度大于152时就吸顶
+        // document.documentElement.scrollTop：获取滚动高度（document.body.scrollTop：IE浏览器）
+        // window.pageYOffset：Y轴偏移量
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
         this.isFixed = scrollTop > 152? true:false;
       }
     },
+    // 去掉组件：销毁定义好的吸顶组件
     destroyed(){
       window.removeEventListener('scroll',this.initHeight,false)
     }
