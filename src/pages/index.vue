@@ -234,17 +234,17 @@ export default {
               this.phoneList = [res.list.slice(0,4), res.list.slice(4,8)]
           })
       },
-      addCart(){
-        this.showModal = true;
-        return;
-        // this.axios.post('/carts',{
-        //   productId:id,
-        //   selected: true
-        // }).then(()=>{
-
-        // }).catch(()=>{
-        //   this.showModal = true;
-        // })
+      // 添加购物车
+      addCart(id){
+        this.axios.post('/carts',{
+          productId:id,
+          selected: true
+        }).then((res)=>{
+          this.showModal = true;
+          this.$store.dispatch('saveCartCount',res.cartTotalQuantity);
+        }).catch(()=>{
+          this.showModal = true;
+        })
       },
       goToCart(){
         this.$router.push('/cart');

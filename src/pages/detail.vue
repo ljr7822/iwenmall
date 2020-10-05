@@ -21,7 +21,7 @@
           <div class="line"></div>
           <div class="item-addr">
             <i class="icon-loc"></i>
-            <div class="addr">北京 北京市 朝阳区 安定门街道</div>
+            <div class="addr">重庆 重庆市 荣昌区 昌元街道</div>
             <div class="stock">有现货</div>
           </div>
           <div class="item-version clearfix">
@@ -68,10 +68,10 @@ export default{
   name:'detail',
   data(){
     return {
-      id:this.$route.params.id,//获取商品ID
+      id:this.$route.params.id,// 获取商品ID
       err:'',
-      version:1,//商品版本切换
-      product:{},//商品信息
+      version:1,// 商品版本切换
+      product:{},// 商品信息
       swiperOption:{
         autoplay:true,
         pagination: {
@@ -91,11 +91,13 @@ export default{
     this.getProductInfo();
   },
   methods:{
+    // 获取商品信息
     getProductInfo(){
       this.axios.get(`/products/${this.id}`).then((res)=>{
         this.product = res;
       })
     },
+    // 加入购物车
     addCart(){
       this.axios.post('/carts',{
         productId:this.id,
