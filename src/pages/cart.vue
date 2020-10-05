@@ -83,7 +83,42 @@
           this.renderData(res);
         })
       },
-      
+      // 更新购物车数量和购物车单选状态
+      updateCart(item,type){
+        let quantity = item.quantity,
+            selected = item.productSelected;
+        if(type == '-'){
+          if(quantity == 1){
+              alert('商品至少保留一件')
+            //this.$message.warning('商品至少保留一件');
+            return;
+          }
+          --quantity;
+        }else if(type == '+'){
+          if(quantity > item.productStock){
+              alert('购买数量不能超过库存数量')
+            //this.$message.warning('购买数量不能超过库存数量');
+            return;
+          }
+          ++quantity;
+        }else{
+          selected = !item.productSelected;
+        }
+        this.axios.put(`/carts/${item.productId}`,{
+          quantity,
+          selected
+        }).then((res)=>{
+          this.renderData(res);
+        })
+      },
+      // 删除购物车商品
+      delProduct(item){
+        this.axios.delete(`/carts/${item.productId}`).then((res)=>{
+            alert('删除成功')
+          //this.$message.success('删除成功');
+          this.renderData(res);
+        });
+      },
       // 控制全选功能
       toggleAll(){
         let url = this.allChecked?'/carts/unSelectAll':'/carts/selectAll';
@@ -91,18 +126,19 @@
           this.renderData(res);
         })
       },
-      // 公共部分赋值
+      // 公共赋值
       renderData(res){
-        this.list = res.cartProductVoList || []; // 购物车列表
-        this.allChecked = res.selectedAll; // 是否全选
+        this.list = res.cartProductVoList || [];
+        this.allChecked = res.selectedAll; // 全选
         this.cartTotalPrice = res.cartTotalPrice; // 购物车总价
         this.checkedNum = this.list.filter(item=>item.productSelected).length; // 选中购物车数量
       },
-      // 购物车下单
+      // 购物车下单结算
       order(){
         let isCheck = this.list.every(item=>!item.productSelected);
         if(isCheck){
-          this.$message.warning('请选择一件商品');
+            alert('请选择一件商品')
+          //this.$message.warning('请选择一件商品');
         }else{
           this.$router.push('/order/confirm');
         }
