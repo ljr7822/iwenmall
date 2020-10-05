@@ -127,6 +127,7 @@
     </div>
 </template>
 <script>
+import {mapState} from 'vuex'
 export default {
     name:'nav-header',
     data(){
@@ -135,12 +136,13 @@ export default {
         }
     },
     computed:{
-        username(){
-            return this.$store.state.username;
-        },
-        cartCount(){
-            return this.$store.state.cartCount;
-        }
+        // username(){
+        //     return this.$store.state.username;
+        // },
+        // cartCount(){
+        //     return this.$store.state.cartCount;
+        // }
+        ...mapState(['username','cartCount'])
     },
     filters:{
         currency(val){
