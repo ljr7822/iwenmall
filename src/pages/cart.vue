@@ -83,39 +83,7 @@
           this.renderData(res);
         })
       },
-      // 更新购物车数量和购物车单选状态
-      updateCart(item,type){
-        let quantity = item.quantity,
-            selected = item.productSelected;
-        if(type == '-'){
-          if(quantity == 1){
-            this.$message.warning('商品至少保留一件');
-            return;
-          }
-          --quantity;
-        }else if(type == '+'){
-          if(quantity > item.productStock){
-            this.$message.warning('购买数量不能超过库存数量');
-            return;
-          }
-          ++quantity;
-        }else{
-          selected = !item.productSelected;
-        }
-        this.axios.put(`/carts/${item.productId}`,{
-          quantity,
-          selected
-        }).then((res)=>{
-          this.renderData(res);
-        })
-      },
-      // 删除购物车商品
-      delProduct(item){
-        this.axios.delete(`/carts/${item.productId}`).then((res)=>{
-          this.$message.success('删除成功');
-          this.renderData(res);
-        });
-      },
+      
       // 控制全选功能
       toggleAll(){
         let url = this.allChecked?'/carts/unSelectAll':'/carts/selectAll';
