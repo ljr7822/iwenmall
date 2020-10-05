@@ -55,9 +55,10 @@ export default {
         username,
         password
       }).then((res)=>{
-        this.$cookie.set('userId',res.id,{expires:'1M'});
+        this.$cookie.set('userId',res.id,{expires:'Session'});
         this.$store.dispatch('saveUserName',res.username);
-        // this.saveUserName(res.username);
+        // 性能优化
+        this.saveUserName(res.username);
         // this.$router.push({
         //   name:'index',
         //   params:{
@@ -75,7 +76,7 @@ export default {
         email:'ljriwen@163.com'
       }).then(()=>{
           // alert('注册成功')
-          // Message.success('注册成功');
+          //Message.success('注册成功');
         this.$message.success('注册成功');
       })
     }
