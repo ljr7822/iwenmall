@@ -6,6 +6,8 @@ import App from './App.vue'
 import VueLazyLoad from 'vue-lazyload'
 import VueCookie from 'vue-cookie'
 import store from './store'
+import { Message } from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css';
 // import env from './env'
 
 const mock = false;
@@ -14,6 +16,7 @@ if(mock){
 }
 
 Vue.config.productionTip = false
+Vue.prototype.$message = Message;
 
 // axios.defaults.baseURL = 'https://www.easy-mock.com/mock/5f6f0151d94dae3ef99d173b/iwenmall';
 axios.defaults.baseURL = '/api';
@@ -33,7 +36,8 @@ axios.interceptors.response.use(function(response){
     }
     return Promise.reject(res);
   }else{
-    alert(res.msg);
+    // alert(res.msg);
+    Message.warning(res.msg)
     return Promise.reject(res);
   }
 });
@@ -43,6 +47,7 @@ Vue.use(VueCookie);
 Vue.use(VueLazyLoad,{
   location:'/imgs/loading-svg/loading-balls.svg'
 })
+// Vue.use(Message);
 
 new Vue({
   store,
