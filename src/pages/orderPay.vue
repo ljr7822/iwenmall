@@ -11,7 +11,7 @@
               <p>收货信息：{{addressInfo}}</p>
             </div>
             <div class="order-total">
-              <p>应付总额：<span>2599</span>元</p>
+              <p>应付总额：<span>{{payment}}</span>元</p>
               <p>订单详情<em class="icon-down" :class="{'up':showDetail}" @click="showDetail=!showDetail"></em></p>
             </div>
           </div>
@@ -51,11 +51,26 @@
       </div>
     </div>
     <scan-pay-code v-if="showPay" @close="closePayModal" :img="payImg"></scan-pay-code>
+
+    <modal
+      title="支付确认"
+      btnType="3"
+      :showModal="showPayModal"
+      sureText="查看订单"
+      cancelText="未支付"
+      @cancel="showPayModal=false"
+      @submit="goOrderList"
+    >
+      <template v-slot:body>
+        <p>您确认是否完成支付？</p>
+      </template>
+    </modal>
   </div>
 </template>
 <script>
 import ScanPayCode from './../components/ScanPayCode'
 import QRCode from 'qrcode'
+import Modal from './../components/Modal'
 export default{
   name:'order-pay',
   data(){
@@ -73,7 +88,8 @@ export default{
     }
   },
   components:{
-      ScanPayCode
+      ScanPayCode,
+      Modal
   },
   mounted(){
     this.getOrderDetail();
@@ -85,7 +101,7 @@ export default{
         let item = res.shippingVo;
         this.addressInfo = `${item.receiverName} ${item.receiverMobile} ${item.receiverProvince} ${item.receiverCity} ${item.receiverDistrict} ${item.receiverAddress}`;
         this.orderDetail = res.orderItemVoList;
-        // this.payment = res.payment;
+        this.payment = res.payment;
       })
     },
     // 提交微信支付
@@ -103,6 +119,7 @@ export default{
             .then(url => {
                 this.showPay = true;
                 this.payImg = url;
+                this.loopOrderState();
             })
             .catch(() => {
                 this.$message.error('微信二维码生成失败，请稍后重试');
@@ -113,6 +130,23 @@ export default{
     // 关闭微信支付二维码弹框
     closePayModal(){
         this.showPay = false;
+        this.showPayModal = true;
+        clearInterval(this.T);
+    },
+    // 轮询当前订单支付状态
+    loopOrderState(){
+      this.T = setInterval(()=>{
+        this.axios.get(`/orders/${this.orderNo}`).then((res)=>{
+          if(res.status == 20){
+            clearInterval(this.T);
+            this.goOrderList();
+          }
+        })
+      },1000);
+    },
+    // 跳转到订单列表
+    goOrderList(){
+        this.$router.push('/order/list');
     }
   }
 }
