@@ -50,11 +50,12 @@
         </div>
       </div>
     </div>
-    <!-- <scan-pay-code v-if="showPay"></scan-pay-code> -->
+    <scan-pay-code v-if="showPay" @close="closePayModal" :img="payImg"></scan-pay-code>
   </div>
 </template>
 <script>
-// import ScanPayCode from './../components/ScanPayCode'
+import ScanPayCode from './../components/ScanPayCode'
+import QRCode from 'qrcode'
 export default{
   name:'order-pay',
   data(){
@@ -70,6 +71,9 @@ export default{
       payment:0,// 订单总金额
       T:''// 定时器ID
     }
+  },
+  components:{
+      ScanPayCode
   },
   mounted(){
     this.getOrderDetail();
@@ -88,8 +92,28 @@ export default{
     paySubmit(payType){
       if(payType == 1){
         window.open('/#/order/alipay?orderId='+this.orderNo,'_blank');
+      }else{
+        this.axios.post('/pay',{
+          orderId:this.orderNo,
+          orderName:'两斤小米',
+          amount:0.01,// 单位元
+          payType:2 // 1支付宝，2微信
+        }).then((res)=>{
+            QRCode.toDataURL(res.content)
+            .then(url => {
+                this.showPay = true;
+                this.payImg = url;
+            })
+            .catch(() => {
+                this.$message.error('微信二维码生成失败，请稍后重试');
+            })
+        })
       }
     },
+    // 关闭微信支付二维码弹框
+    closePayModal(){
+        this.showPay = false;
+    }
   }
 }
 </script>
