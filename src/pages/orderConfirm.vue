@@ -25,7 +25,7 @@
           <div class="item-address">
             <h2 class="addr-title">收货地址</h2>
             <div class="addr-list clearfix">
-              <div class="addr-info" v-for="(item, index) in list" :key="index">
+              <div class="addr-info" :class="{'checked':index == checkIndex}" @click="checkIndex=index" v-for="(item, index) in list" :key="index">
                 <h2>{{item.receiverName}}</h2>
                 <div class="phone">{{item.receiverMobile}}</div>
                 <div class="street">{{item.receiverProvince + ' ' + item.receiverCity + ' ' + item.receiverDistrict}}<br>{{item.receiverAddress}}</div>
@@ -33,7 +33,7 @@
                   <a href="javascript:;" class="fl" @click="delAddress(item)">
                     <svg class="icon icon-del"><use xlink:href="#icon-del"></use></svg>
                   </a>
-                  <a href="javascript:;" class="fr">
+                  <a href="javascript:;" class="fr" @click="editAddressModal(item)">
                     <svg class="icon icon-edit"><use xlink:href="#icon-edit"></use></svg>
                   </a>
                 </div>
@@ -265,13 +265,29 @@ export default{
         this.checkedItem = {};
         this.showEditModal = true;
     },
+    // 打开编辑地址弹框
+    editAddressModal(item){
+      this.userAction = 1;
+      this.checkedItem = item;
+      this.showEditModal = true;
+    },
     // 订单提交
     orderSubmit(){
-      this.$router.push({
-        path:'/order/pay',
-        query:{
-          orderNo:123
-        }
+      let item = this.list[this.checkIndex]; // 通过收货地址列表按照索引寻找地址
+      if(!item){
+          // 没有取到地址，地址不存在，提示用户
+        this.$message.error('请选择一个收货地址');
+        return;
+      }
+      this.axios.post('/orders',{
+        shippingId:item.id
+      }).then((res)=>{
+        this.$router.push({
+          path:'/order/pay',
+          query:{
+            orderNo:res.orderNo
+          }
+        })
       })
     }
   }
